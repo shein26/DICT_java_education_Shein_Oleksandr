@@ -7,32 +7,43 @@ public class Hangman {
     public static void main(String[] args) {
         System.out.println("HANGMAN");
 
-        // Етап 6: Кількість спроб обмежується кількістю помилок
+        // Етап 7: Перевірка на різні типи помилок та виправлення кількості спроб
         String[] words = {"python", "java", "javascript", "kotlin"};
         Random random = new Random();
-        String secretWord = words[random.nextInt(words.length)];  // Випадковий вибір слова
+        String secretWord = words[random.nextInt(words.length)];
 
-        // Створення підказки
         StringBuilder hint = new StringBuilder(secretWord.length());
         for (int i = 0; i < secretWord.length(); i++) {
             hint.append("-");
         }
 
-        // Змінні для кількості залишених спроб та введених букв
         int remainingAttempts = 8;
         StringBuilder guessedLetters = new StringBuilder();
 
-        // Гравець вгадує літери
         while (remainingAttempts > 0) {
             System.out.println("Word: " + hint);
             System.out.println("Attempts left: " + remainingAttempts);
             System.out.print("Input a letter: ");
             Scanner scanner = new Scanner(System.in);
-            char guessedLetter = scanner.nextLine().charAt(0);
+            String input = scanner.nextLine();
 
-            // Перевірка, чи буква вже вводилася
+            // Перевірка, чи введена одна буква
+            if (input.length() != 1) {
+                System.out.println("You should input a single letter");
+                continue;
+            }
+
+            char guessedLetter = input.charAt(0);
+
+            // Перевірка, чи введено малу англійську букву
+            if (!Character.isLowerCase(guessedLetter)) {
+                System.out.println("Please enter a lowercase English letter");
+                continue;
+            }
+
+            // Перевірка, чи буква вже була введена
             if (guessedLetters.indexOf(String.valueOf(guessedLetter)) != -1) {
-                System.out.println("You've already guessed this letter. Try another one.");
+                System.out.println("You've already guessed this letter");
                 continue;
             }
 
@@ -48,7 +59,6 @@ public class Hangman {
                     }
                 }
 
-                // Перевірка, чи слово повністю вгадане
                 if (hint.toString().equals(secretWord)) {
                     System.out.println("Word: " + hint);
                     System.out.println("You guessed the word!");
@@ -56,7 +66,6 @@ public class Hangman {
                     break;
                 }
 
-                // Вивід повідомлення про поліпшення, якщо буква відкрита
                 if (improvement) {
                     System.out.println("No improvements");
                 }

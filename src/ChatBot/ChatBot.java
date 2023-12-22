@@ -29,6 +29,14 @@ public class ChatBot {
 
         System.out.println("Your age is " + userAge + "; that's a good time to start programming!");
 
-        // Зробіть коміт для позначення виконання третього етапу: "ChatBot 3-rd stage"
+        // Етап 4: Підрахунок від 0 до введеного числа користувачем
+        System.out.println("Now I will prove to you that I can count to any number you want!");
+        int userInp = scanner.nextInt();
+
+        for (int i = 1; i <= userInp; i++) {
+            System.out.println(i + "!");
+        }
+
+        // Зробіть коміт для позначення виконання четвертого етапу: "ChatBot 4-th stage"
     }
 }

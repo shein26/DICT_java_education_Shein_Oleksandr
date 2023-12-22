@@ -10,10 +10,13 @@ public class TicTacToe {
 
         System.out.print("Enter cells: ");
         String userInput = scanner.nextLine().toUpperCase();
-
         initializeGameBoard(gameBoard, userInput);
-        printGameBoard(gameBoard);
-        analyzeGameState(gameBoard);
+
+        while (true) {
+            printGameBoard(gameBoard);
+            makeMove(scanner, gameBoard);
+            analyzeGameState(gameBoard);
+        }
     }
 
     public static void initializeGameBoard(char[][] board, String userInput) {
@@ -47,6 +50,33 @@ public class TicTacToe {
         System.out.println("---------");
     }
 
+    public static void makeMove(Scanner scanner, char[][] board) {
+        int row, col;
+
+        while (true) {
+            System.out.print("Enter the coordinates: ");
+            try {
+                row = scanner.nextInt();
+                col = scanner.nextInt();
+            } catch (Exception e) {
+                System.out.println("You should enter numbers!");
+                scanner.nextLine(); // Clear the buffer
+                continue;
+            }
+
+            if (isValidMove(row, col, board)) {
+                board[row - 1][col - 1] = 'X';
+                break;
+            } else {
+                System.out.println("This cell is occupied! Choose another one!");
+            }
+        }
+    }
+
+    public static boolean isValidMove(int row, int col, char[][] board) {
+        return row >= 1 && row <= 3 && col >= 1 && col <= 3 && board[row - 1][col - 1] == '_';
+    }
+
     public static void analyzeGameState(char[][] board) {
         boolean xWins = checkForWinner(board, 'X');
         boolean oWins = checkForWinner(board, 'O');
@@ -55,14 +85,19 @@ public class TicTacToe {
 
         if (xWins && oWins || isImpossible) {
             System.out.println("Impossible");
+            System.exit(0);
         } else if (xWins) {
+            printGameBoard(board);
             System.out.println("X wins");
+            System.exit(0);
         } else if (oWins) {
+            printGameBoard(board);
             System.out.println("O wins");
-        } else if (gameNotFinished) {
-            System.out.println("Game not finished");
-        } else {
+            System.exit(0);
+        } else if (!gameNotFinished) {
+            printGameBoard(board);
             System.out.println("Draw");
+            System.exit(0);
         }
     }
 

@@ -6,47 +6,88 @@ public class MatrixProcessing {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        // Виберемо етап роботи програми
-        System.out.println("Choose stage: 1 for matrix addition, 2 for multiplying by constant");
-        int stage = scanner.nextInt();
+        int choice;
+        do {
+            System.out.println("1. Add matrices");
+            System.out.println("2. Multiply matrix by a constant");
+            System.out.println("3. Multiply matrices");
+            System.out.println("0. Exit");
+            System.out.print("Your choice: ");
+            choice = scanner.nextInt();
 
-        if (stage == 1) {
-            // Етап 1: Додавання матриць
-
-            // Зчитуємо матрицю A
-            System.out.println("Enter matrix A:");
-            int[][] matrixA = readMatrix(scanner);
-
-            // Зчитуємо матрицю B
-            System.out.println("Enter matrix B:");
-            int[][] matrixB = readMatrix(scanner);
-
-            // Виводимо суму матриць, якщо можливо
-            int[][] sumMatrix = addMatrices(matrixA, matrixB);
-            if (sumMatrix != null) {
-                System.out.println("Sum of matrices:");
-                printMatrix(sumMatrix);
-            } else {
-                System.out.println("ERROR: Matrices have different dimensions.");
+            switch (choice) {
+                case 1:
+                    addMatricesOperation(scanner);
+                    break;
+                case 2:
+                    multiplyByConstantOperation(scanner);
+                    break;
+                case 3:
+                    multiplyMatricesOperation(scanner);
+                    break;
+                case 0:
+                    System.out.println("Exiting the program.");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please enter a valid option.");
             }
-        } else if (stage == 2) {
-            // Етап 2: Множення матриці на константу
+        } while (choice != 0);
+    }
 
-            // Зчитуємо матрицю
-            System.out.println("Enter the matrix:");
-            int[][] matrix = readMatrix(scanner);
+    public static void addMatricesOperation(Scanner scanner) {
+        System.out.println("Enter size of first matrix:");
+        int[][] matrixA = readMatrix(scanner);
+        System.out.println("Enter size of second matrix:");
+        int[][] matrixB = readMatrix(scanner);
 
-            // Зчитуємо константу
-            System.out.println("Enter the constant:");
-            int constant = scanner.nextInt();
+        int[][] sumMatrix = addMatrices(matrixA, matrixB);
+        if (sumMatrix != null) {
+            System.out.println("The result is:");
+            printMatrix(sumMatrix);
+        } else {
+            System.out.println("The operation cannot be performed.");
+        }
+    }
 
-            // Множимо матрицю на константу та виводимо результат
-            int[][] resultMatrix = multiplyMatrixByConstant(matrix, constant);
-            System.out.println("Result of multiplying by constant:");
+    public static void multiplyByConstantOperation(Scanner scanner) {
+        System.out.println("Enter size of matrix:");
+        int[][] matrix = readMatrix(scanner);
+        System.out.println("Enter constant:");
+        int constant = scanner.nextInt();
+
+        int[][] resultMatrix = multiplyMatrixByConstant(matrix, constant);
+        System.out.println("The result is:");
+        printMatrix(resultMatrix);
+    }
+
+    public static void multiplyMatricesOperation(Scanner scanner) {
+        System.out.println("Enter size of first matrix:");
+        int[][] matrixA = readMatrix(scanner);
+        System.out.println("Enter size of second matrix:");
+        int[][] matrixB = readMatrix(scanner);
+
+        int[][] resultMatrix = multiplyMatrices(matrixA, matrixB);
+        if (resultMatrix != null) {
+            System.out.println("The result is:");
             printMatrix(resultMatrix);
         } else {
-            System.out.println("Invalid stage. Please choose 1 or 2.");
+            System.out.println("The operation cannot be performed.");
         }
+    }
+
+    public static int[][] readMatrix(Scanner scanner) {
+        int rows = scanner.nextInt();
+        int cols = scanner.nextInt();
+        int[][] matrix = new int[rows][cols];
+
+        System.out.println("Enter matrix:");
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                matrix[i][j] = scanner.nextInt();
+            }
+        }
+
+        return matrix;
     }
 
     public static int[][] addMatrices(int[][] matrixA, int[][] matrixB) {
@@ -55,20 +96,19 @@ public class MatrixProcessing {
         int rowsB = matrixB.length;
         int colsB = matrixB[0].length;
 
-        // Перевіряємо, чи можна додавати матриці
         if (rowsA != rowsB || colsA != colsB) {
-            return null;  // Матриці мають різні розміри
+            return null;  // Неможливо додати матриці різних розмірів
         }
 
-        int[][] resultMatrix = new int[rowsA][colsA];
+        int[][] sumMatrix = new int[rowsA][colsA];
 
         for (int i = 0; i < rowsA; i++) {
             for (int j = 0; j < colsA; j++) {
-                resultMatrix[i][j] = matrixA[i][j] + matrixB[i][j];
+                sumMatrix[i][j] = matrixA[i][j] + matrixB[i][j];
             }
         }
 
-        return resultMatrix;
+        return sumMatrix;
     }
 
     public static int[][] multiplyMatrixByConstant(int[][] matrix, int constant) {
@@ -86,19 +126,27 @@ public class MatrixProcessing {
         return resultMatrix;
     }
 
-    public static int[][] readMatrix(Scanner scanner) {
-        int rows = scanner.nextInt();
-        int cols = scanner.nextInt();
+    public static int[][] multiplyMatrices(int[][] matrixA, int[][] matrixB) {
+        int rowsA = matrixA.length;
+        int colsA = matrixA[0].length;
+        int rowsB = matrixB.length;
+        int colsB = matrixB[0].length;
 
-        int[][] matrix = new int[rows][cols];
+        if (colsA != rowsB) {
+            return null;  // Кількість стовпців матриці A не дорівнює кількості рядків матриці B
+        }
 
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                matrix[i][j] = scanner.nextInt();
+        int[][] resultMatrix = new int[rowsA][colsB];
+
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsB; j++) {
+                for (int k = 0; k < colsA; k++) {
+                    resultMatrix[i][j] += matrixA[i][k] * matrixB[k][j];
+                }
             }
         }
 
-        return matrix;
+        return resultMatrix;
     }
 
     public static void printMatrix(int[][] matrix) {

@@ -37,6 +37,28 @@ public class ChatBot {
             System.out.println(i + "!");
         }
 
-        // Зробіть коміт для позначення виконання четвертого етапу: "ChatBot 4-th stage"
+        // Етап 5: Тест
+        System.out.println("Let's test your programming knowledge.");
+        System.out.println("What is the capital of France?");
+        System.out.println("1. Madrid");
+        System.out.println("2. Berlin");
+        System.out.println("3. Paris");
+        System.out.println("4. Rome");
+
+        int correctAnswer = 3;
+
+        while (true) {
+            int userAnswer = scanner.nextInt();
+
+            if (userAnswer == correctAnswer) {
+                System.out.println("Congratulations! That's correct.");
+                break;
+            } else {
+                System.out.println("Sorry, that's incorrect. Try again.");
+            }
+        }
+
+        // Зробіть коміт для позначення виконання п'ятого етапу: "ChatBot 5-th stage"
+        System.out.println("Goodbye, have a nice day!");
     }
 }
